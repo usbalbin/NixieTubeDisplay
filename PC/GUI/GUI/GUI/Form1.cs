@@ -21,5 +21,27 @@ namespace GUI
         {
             this.Close();
         }
+
+        private void Select_btn_Click(object sender, EventArgs e)
+        {
+            foreach(Control c in Controls)
+            {
+                if(c is CheckBox)
+                {
+                    CheckBox cb = (CheckBox)c;
+                    if(cb.Checked == false)
+                    {
+                        cb.Checked = true;
+                        Select_btn.Text = "Deselect All";
+                        
+                    }
+                    else
+                    {
+                        cb.Checked = false;
+                        Select_btn.Text = "Select All";
+                    }
+                }
+            }
+        }
     }
 }
