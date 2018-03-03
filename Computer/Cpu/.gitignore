@@ -1,0 +1,9 @@
+*.VC.opendb
+.vs/
+*.*obj
+*.*pdb
+*.*log
+*.idb
+*.ilk
+*.exp
+*.tlog/

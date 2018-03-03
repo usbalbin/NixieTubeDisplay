@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27323.2
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Cpu", "Cpu\Cpu.vcxproj", "{C54D4B5C-1683-48CA-A0D6-5DBE726A0F9F}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
+		DLL|x64 = DLL|x64
+		DLL|x86 = DLL|x86
+		Exe|x64 = Exe|x64
+		Exe|x86 = Exe|x86
+		Lib|x64 = Lib|x64
+		Lib|x86 = Lib|x86
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{C54D4B5C-1683-48CA-A0D6-5DBE726A0F9F}.Debug|x64.ActiveCfg = Debug|x64
+		{C54D4B5C-1683-48CA-A0D6-5DBE726A0F9F}.Debug|x64.Build.0 = Debug|x64
+		{C54D4B5C-1683-48CA-A0D6-5DBE726A0F9F}.Debug|x86.ActiveCfg = Debug|Win32
+		{C54D4B5C-1683-48CA-A0D6-5DBE726A0F9F}.Debug|x86.Build.0 = Debug|Win32
+		{C54D4B5C-1683-48CA-A0D6-5DBE726A0F9F}.DLL|x64.ActiveCfg = DLL|x64
+		{C54D4B5C-1683-48CA-A0D6-5DBE726A0F9F}.DLL|x64.Build.0 = DLL|x64
+		{C54D4B5C-1683-48CA-A0D6-5DBE726A0F9F}.DLL|x86.ActiveCfg = DLL|Win32
+		{C54D4B5C-1683-48CA-A0D6-5DBE726A0F9F}.DLL|x86.Build.0 = DLL|Win32
+		{C54D4B5C-1683-48CA-A0D6-5DBE726A0F9F}.Exe|x64.ActiveCfg = Exe|x64
+		{C54D4B5C-1683-48CA-A0D6-5DBE726A0F9F}.Exe|x64.Build.0 = Exe|x64
+		{C54D4B5C-1683-48CA-A0D6-5DBE726A0F9F}.Exe|x86.ActiveCfg = Exe|Win32
+		{C54D4B5C-1683-48CA-A0D6-5DBE726A0F9F}.Exe|x86.Build.0 = Exe|Win32
+		{C54D4B5C-1683-48CA-A0D6-5DBE726A0F9F}.Lib|x64.ActiveCfg = Release|x64
+		{C54D4B5C-1683-48CA-A0D6-5DBE726A0F9F}.Lib|x64.Build.0 = Release|x64
+		{C54D4B5C-1683-48CA-A0D6-5DBE726A0F9F}.Lib|x86.ActiveCfg = Release|Win32
+		{C54D4B5C-1683-48CA-A0D6-5DBE726A0F9F}.Lib|x86.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {D1E9FB7B-4C42-4C0A-ABD0-7DD974501970}
+	EndGlobalSection
+EndGlobal
