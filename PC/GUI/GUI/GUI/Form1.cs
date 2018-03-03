@@ -106,7 +106,7 @@ namespace GUI
                     System.IO.Directory.CreateDirectory(folderpath);
 
                 string text = "com_name " + ComBox.SelectedItem.ToString() + "\n" +
-                    "com_baud " + Baud_box.SelectedItem.ToString() + "\n";
+                    "com_baud " + Baud_box.SelectedItem.ToString() + "\n"+ "propeties ";
                 foreach (Control c in Controls)
                 {
                     if (c is CheckBox)
