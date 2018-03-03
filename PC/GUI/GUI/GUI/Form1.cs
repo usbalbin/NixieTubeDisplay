@@ -1,4 +1,6 @@
 ﻿using System;
+using System.IO;
+using System.IO.Ports;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -8,6 +10,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
+
+
 namespace GUI
 {
     public partial class Form1 : Form
@@ -15,6 +19,18 @@ namespace GUI
         public Form1()
         {
             InitializeComponent();
+            
+            object[] baudrate = new object[] { 300, 1200, 2400, 4800, 9600, 14400, 19200, 28800, 30400, 38400, 57600, 115200};
+            foreach (string s in System.IO.Ports.SerialPort.GetPortNames())
+            {
+                ComBox.Items.Add(s);
+            }
+            if (ComBox.Items.Count == 0 )
+            {
+                ComBox.Items.Add("No COM-port Available");
+            }
+
+            Baud_box.Items.AddRange(baudrate);
         }
 
         private void Ext_btn_Click(object sender, EventArgs e)
@@ -32,16 +48,58 @@ namespace GUI
                     if(cb.Checked == false)
                     {
                         cb.Checked = true;
-                        Select_btn.Text = "Deselect All";
-                        
                     }
                     else
                     {
-                        cb.Checked = false;
-                        Select_btn.Text = "Select All";
+                        cb.Checked = false;   
                     }
                 }
             }
+        }
+
+        private void button2_Click(object sender, EventArgs e)
+        {
+            foreach (Control c in Controls)
+            {
+                if (c is CheckBox)
+                {
+                    CheckBox cb = (CheckBox)c;
+                        cb.Checked = true;
+                }
+            }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            string folderpath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)+"\\NixieTubeController";
+            string subPath = folderpath; // your code goes here
+
+            bool exists = System.IO.Directory.Exists(subPath);
+
+            if (!exists)
+                System.IO.Directory.CreateDirectory(subPath);
+
+            
+            string text = "com_name " + ComBox.SelectedItem.ToString() + "\n" +
+                "com_baud " + Baud_box.SelectedItem.ToString() + "\n";   
+            foreach (Control c in Controls)
+            {
+                if (c is CheckBox)
+                {
+                    CheckBox cb = (CheckBox)c;
+                    if (cb.Checked == true)
+                    {
+                        text += cb.Text.ToString()+" ";
+                    }
+                }
+            }
+            
+            System.IO.File.WriteAllText(@folderpath+ "Settings.txt", text);
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+
         }
     }
 }
