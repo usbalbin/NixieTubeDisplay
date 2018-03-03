@@ -1,0 +1,7 @@
+﻿  main.cpp
+  Generating code
+  98 of 310 functions (31.6%) were compiled, the rest were copied from previous compilation.
+    88 functions were new in current compilation
+    43 functions had inline decision re-evaluated but remain unchanged
+  Finished generating code
+  Cpu.vcxproj -> C:\Users\albin\Source\Repos\Cpu\x64\Release\Cpu.exe
