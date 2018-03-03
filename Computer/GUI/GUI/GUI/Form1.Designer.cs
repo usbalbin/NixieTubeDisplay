@@ -230,7 +230,7 @@
             this.checkBox15.AutoSize = true;
             this.checkBox15.Location = new System.Drawing.Point(640, 371);
             this.checkBox15.Name = "checkBox15";
-            this.checkBox15.Size = new System.Drawing.Size(60, 21);
+            this.checkBox15.Size = new System.Drawing.Size(92, 21);
             this.checkBox15.TabIndex = 21;
             this.checkBox15.Text = "time_date";
             this.checkBox15.UseVisualStyleBackColor = true;
@@ -240,7 +240,7 @@
             this.checkBox16.AutoSize = true;
             this.checkBox16.Location = new System.Drawing.Point(640, 344);
             this.checkBox16.Name = "checkBox16";
-            this.checkBox16.Size = new System.Drawing.Size(64, 21);
+            this.checkBox16.Size = new System.Drawing.Size(96, 21);
             this.checkBox16.TabIndex = 20;
             this.checkBox16.Text = "time_clock";
             this.checkBox16.UseVisualStyleBackColor = true;
