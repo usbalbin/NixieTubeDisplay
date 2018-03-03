@@ -1,3 +1,0 @@
-com_name COM1
-com_baud 4800
-Disk usage % CPU-Memory MB CPU-temp CPU- Usage % 
