@@ -45,9 +45,6 @@
             this.checkBox9 = new System.Windows.Forms.CheckBox();
             this.checkBox10 = new System.Windows.Forms.CheckBox();
             this.checkBox11 = new System.Windows.Forms.CheckBox();
-            this.checkBox12 = new System.Windows.Forms.CheckBox();
-            this.checkBox13 = new System.Windows.Forms.CheckBox();
-            this.checkBox14 = new System.Windows.Forms.CheckBox();
             this.checkBox15 = new System.Windows.Forms.CheckBox();
             this.checkBox16 = new System.Windows.Forms.CheckBox();
             this.Save_Start_btn = new System.Windows.Forms.Button();
@@ -75,7 +72,7 @@
             this.checkBox1.Name = "checkBox1";
             this.checkBox1.Size = new System.Drawing.Size(93, 21);
             this.checkBox1.TabIndex = 1;
-            this.checkBox1.Text = "Gpu-temp";
+            this.checkBox1.Text = "gpu_temp";
             this.checkBox1.UseVisualStyleBackColor = true;
             // 
             // checkBox2
@@ -83,9 +80,9 @@
             this.checkBox2.AutoSize = true;
             this.checkBox2.Location = new System.Drawing.Point(40, 371);
             this.checkBox2.Name = "checkBox2";
-            this.checkBox2.Size = new System.Drawing.Size(132, 21);
+            this.checkBox2.Size = new System.Drawing.Size(101, 21);
             this.checkBox2.TabIndex = 2;
-            this.checkBox2.Text = "GPU-Usage (%)";
+            this.checkBox2.Text = "gpu_usage";
             this.checkBox2.UseVisualStyleBackColor = true;
             // 
             // checkBox3
@@ -93,9 +90,9 @@
             this.checkBox3.AutoSize = true;
             this.checkBox3.Location = new System.Drawing.Point(40, 425);
             this.checkBox3.Name = "checkBox3";
-            this.checkBox3.Size = new System.Drawing.Size(141, 21);
+            this.checkBox3.Size = new System.Drawing.Size(131, 21);
             this.checkBox3.TabIndex = 4;
-            this.checkBox3.Text = "GPU-MEM Usage";
+            this.checkBox3.Text = "gpu_memusage";
             this.checkBox3.UseVisualStyleBackColor = true;
             // 
             // checkBox4
@@ -105,7 +102,7 @@
             this.checkBox4.Name = "checkBox4";
             this.checkBox4.Size = new System.Drawing.Size(155, 21);
             this.checkBox4.TabIndex = 3;
-            this.checkBox4.Text = "GPU-MEM usage %";
+            this.checkBox4.Text = "gpu-memusage_mb";
             this.checkBox4.UseVisualStyleBackColor = true;
             // 
             // checkBox5
@@ -113,9 +110,9 @@
             this.checkBox5.AutoSize = true;
             this.checkBox5.Location = new System.Drawing.Point(245, 371);
             this.checkBox5.Name = "checkBox5";
-            this.checkBox5.Size = new System.Drawing.Size(94, 21);
+            this.checkBox5.Size = new System.Drawing.Size(92, 21);
             this.checkBox5.TabIndex = 6;
-            this.checkBox5.Text = "CPU-temp";
+            this.checkBox5.Text = "cpu_temp";
             this.checkBox5.UseVisualStyleBackColor = true;
             // 
             // checkBox6
@@ -123,9 +120,9 @@
             this.checkBox6.AutoSize = true;
             this.checkBox6.Location = new System.Drawing.Point(245, 344);
             this.checkBox6.Name = "checkBox6";
-            this.checkBox6.Size = new System.Drawing.Size(124, 21);
+            this.checkBox6.Size = new System.Drawing.Size(100, 21);
             this.checkBox6.TabIndex = 5;
-            this.checkBox6.Text = "CPU- Usage %";
+            this.checkBox6.Text = "cpu_usage";
             this.checkBox6.UseVisualStyleBackColor = true;
             // 
             // checkBox7
@@ -133,9 +130,9 @@
             this.checkBox7.AutoSize = true;
             this.checkBox7.Location = new System.Drawing.Point(245, 425);
             this.checkBox7.Name = "checkBox7";
-            this.checkBox7.Size = new System.Drawing.Size(137, 21);
+            this.checkBox7.Size = new System.Drawing.Size(157, 21);
             this.checkBox7.TabIndex = 8;
-            this.checkBox7.Text = "CPU-Memory MB";
+            this.checkBox7.Text = "cpu_memusage_mb";
             this.checkBox7.UseVisualStyleBackColor = true;
             // 
             // checkBox8
@@ -143,9 +140,9 @@
             this.checkBox8.AutoSize = true;
             this.checkBox8.Location = new System.Drawing.Point(245, 398);
             this.checkBox8.Name = "checkBox8";
-            this.checkBox8.Size = new System.Drawing.Size(129, 21);
+            this.checkBox8.Size = new System.Drawing.Size(130, 21);
             this.checkBox8.TabIndex = 7;
-            this.checkBox8.Text = "CPU-Memory %";
+            this.checkBox8.Text = "cpu_memusage";
             this.checkBox8.UseVisualStyleBackColor = true;
             // 
             // Invert_btn
@@ -201,62 +198,32 @@
             // checkBox9
             // 
             this.checkBox9.AutoSize = true;
-            this.checkBox9.Location = new System.Drawing.Point(458, 425);
+            this.checkBox9.Location = new System.Drawing.Point(458, 398);
             this.checkBox9.Name = "checkBox9";
-            this.checkBox9.Size = new System.Drawing.Size(143, 21);
+            this.checkBox9.Size = new System.Drawing.Size(108, 21);
             this.checkBox9.TabIndex = 19;
-            this.checkBox9.Text = "Disk Latency (ms)";
+            this.checkBox9.Text = "disk_latency";
             this.checkBox9.UseVisualStyleBackColor = true;
             // 
             // checkBox10
             // 
             this.checkBox10.AutoSize = true;
-            this.checkBox10.Location = new System.Drawing.Point(458, 398);
+            this.checkBox10.Location = new System.Drawing.Point(458, 371);
             this.checkBox10.Name = "checkBox10";
-            this.checkBox10.Size = new System.Drawing.Size(116, 21);
+            this.checkBox10.Size = new System.Drawing.Size(102, 21);
             this.checkBox10.TabIndex = 18;
-            this.checkBox10.Text = "Disk usage %";
+            this.checkBox10.Text = "disk_usage";
             this.checkBox10.UseVisualStyleBackColor = true;
             // 
             // checkBox11
             // 
             this.checkBox11.AutoSize = true;
-            this.checkBox11.Location = new System.Drawing.Point(458, 371);
+            this.checkBox11.Location = new System.Drawing.Point(458, 344);
             this.checkBox11.Name = "checkBox11";
-            this.checkBox11.Size = new System.Drawing.Size(111, 21);
+            this.checkBox11.Size = new System.Drawing.Size(129, 21);
             this.checkBox11.TabIndex = 17;
-            this.checkBox11.Text = "Diskspace %";
+            this.checkBox11.Text = "disk_usage_mb";
             this.checkBox11.UseVisualStyleBackColor = true;
-            // 
-            // checkBox12
-            // 
-            this.checkBox12.AutoSize = true;
-            this.checkBox12.Location = new System.Drawing.Point(458, 344);
-            this.checkBox12.Name = "checkBox12";
-            this.checkBox12.Size = new System.Drawing.Size(119, 21);
-            this.checkBox12.TabIndex = 16;
-            this.checkBox12.Text = "Diskspace GB";
-            this.checkBox12.UseVisualStyleBackColor = true;
-            // 
-            // checkBox13
-            // 
-            this.checkBox13.AutoSize = true;
-            this.checkBox13.Location = new System.Drawing.Point(640, 425);
-            this.checkBox13.Name = "checkBox13";
-            this.checkBox13.Size = new System.Drawing.Size(137, 21);
-            this.checkBox13.TabIndex = 23;
-            this.checkBox13.Text = "CPU-Memory MB";
-            this.checkBox13.UseVisualStyleBackColor = true;
-            // 
-            // checkBox14
-            // 
-            this.checkBox14.AutoSize = true;
-            this.checkBox14.Location = new System.Drawing.Point(640, 398);
-            this.checkBox14.Name = "checkBox14";
-            this.checkBox14.Size = new System.Drawing.Size(129, 21);
-            this.checkBox14.TabIndex = 22;
-            this.checkBox14.Text = "CPU-Memory %";
-            this.checkBox14.UseVisualStyleBackColor = true;
             // 
             // checkBox15
             // 
@@ -265,7 +232,7 @@
             this.checkBox15.Name = "checkBox15";
             this.checkBox15.Size = new System.Drawing.Size(60, 21);
             this.checkBox15.TabIndex = 21;
-            this.checkBox15.Text = "Date";
+            this.checkBox15.Text = "time_date";
             this.checkBox15.UseVisualStyleBackColor = true;
             // 
             // checkBox16
@@ -275,7 +242,7 @@
             this.checkBox16.Name = "checkBox16";
             this.checkBox16.Size = new System.Drawing.Size(64, 21);
             this.checkBox16.TabIndex = 20;
-            this.checkBox16.Text = "Clock";
+            this.checkBox16.Text = "time_clock";
             this.checkBox16.UseVisualStyleBackColor = true;
             // 
             // Save_Start_btn
@@ -344,14 +311,11 @@
             this.Controls.Add(this.label5);
             this.Controls.Add(this.ComBox);
             this.Controls.Add(this.Save_Start_btn);
-            this.Controls.Add(this.checkBox13);
-            this.Controls.Add(this.checkBox14);
             this.Controls.Add(this.checkBox15);
             this.Controls.Add(this.checkBox16);
             this.Controls.Add(this.checkBox9);
             this.Controls.Add(this.checkBox10);
             this.Controls.Add(this.checkBox11);
-            this.Controls.Add(this.checkBox12);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
@@ -369,10 +333,10 @@
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
             this.MaximizeBox = false;
             this.Name = "Form1";
+            this.ShowIcon = false;
             this.SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Nixie Tube Configurator";
-            this.Load += new System.EventHandler(this.Form1_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -397,9 +361,6 @@
         private System.Windows.Forms.CheckBox checkBox9;
         private System.Windows.Forms.CheckBox checkBox10;
         private System.Windows.Forms.CheckBox checkBox11;
-        private System.Windows.Forms.CheckBox checkBox12;
-        private System.Windows.Forms.CheckBox checkBox13;
-        private System.Windows.Forms.CheckBox checkBox14;
         private System.Windows.Forms.CheckBox checkBox15;
         private System.Windows.Forms.CheckBox checkBox16;
         private System.Windows.Forms.Button Save_Start_btn;
