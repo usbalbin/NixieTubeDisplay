@@ -2,6 +2,7 @@
 name = "deamon"
 version = "0.1.0"
 authors = ["usbalbin <albin9604@gmail.com>"]
+build = "build.rs"
 
 [dependencies]
 sys-info = "0.5.6"

@@ -13,6 +13,8 @@ use nvapi_sys::gpu::thermal::{
     NvAPI_GPU_GetThermalSettings
 };
 
+pub mod cpu;
+
 pub fn get_gpus() -> Vec<NvPhysicalGpuHandle> {
     unsafe {
         let status = NvAPI_Initialize();

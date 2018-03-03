@@ -1,0 +1,7 @@
+LIBRARY Cpu
+EXPORTS
+	cpu_temp	@1
+	cpu_tj_max	@2
+	test		@3
+	init_cpu	@4
+	uninit_cpu	@5

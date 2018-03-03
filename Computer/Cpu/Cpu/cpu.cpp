@@ -1,8 +1,11 @@
+
+#include "cpu.h"
+
 #include <iostream>
 #include <tchar.h>
 #include "../WinRing0/stdafx.h"
 
-#define DLL
+//#define DLL
 
 #ifdef DLL
 #include "../WinRing0/OlsApiInit.h"
@@ -69,30 +72,30 @@ bool is_valid_temp(DWORD data) {
 	return ((1 << 31) & data) != 0;
 }
 
-int cpu_temp(int tjMax) {
+extern "C" int32_t cpu_temp(int32_t tjMax) {
 
 	DWORD eax, edx;
-	if(!Rdmsr(0x019C, &eax, &edx))
-		throw "Failed to cpu temp";
+	if (!Rdmsr(0x019C, &eax, &edx))
+		return 0;
 
 	if (!is_valid_temp(eax))
-		throw "Failed to cpu temp";
+		return 0;
 
 	return (tjMax - parse_temp(eax));
 }
 
-int cpu_tj_max() {
+extern "C" int32_t cpu_tj_max() {
 
 	DWORD eax, edx;
 	if (!Rdmsr(0x01A2, &eax, &edx))
-		throw "Failed to get cpu tj_max";
+		return 0;
 
 	return (eax >> 16) & 0xFF;
 }
 
 
 
-HMODULE init_cpu() {
+extern "C" void init_cpu() {
 	HMODULE h = NULL;
 
 #ifdef DLL
@@ -101,20 +104,18 @@ HMODULE init_cpu() {
 	if (!InitializeOls()) {
 #endif
 		std::cout << "ajaj" << std::endl;
-		return NULL;
+		return;
 	}
 	auto status = GetDllStatus();
 	bool s = IsMsr();//Has support for temp stuff
-
-	return h;
 }
 
 
-void uninit_cpu(HMODULE* h) {
+extern "C" void uninit_cpu(void* h) {
 #ifdef DLL
 	if (h == NULL)
 		return;
-	DeinitOpenLibSys(h);
+	DeinitOpenLibSys((HMODULE)h);
 #else
 	DeinitializeOls();
 #endif
@@ -124,13 +125,21 @@ void uninit_cpu(HMODULE* h) {
 
 
 int main() {
-	auto h = init_cpu();
+
+	int size = sizeof(HMODULE);
+	std::cout << size << std::endl;
+
+	test();
+}
+
+extern "C" void test() {
+	init_cpu();
 	DWORD tj_max = cpu_tj_max();
 
 
 
 
-	while (true) {
+	for(int i = 0; i < 10; i++) {
 		
 		std::cout << "Temp: " << cpu_temp(tj_max) << std::endl;
 		Sleep(1000);
@@ -138,5 +147,5 @@ int main() {
 
 
 
-	uninit_cpu(&h);
+	//uninit_cpu(h);
 }
