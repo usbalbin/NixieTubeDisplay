@@ -42,8 +42,6 @@ namespace GUI
                 ConfigText = System.IO.File.ReadAllText(folderpath + "settings.conf");
                 string pattern = @"\n";
                 string[] config = Regex.Split(ConfigText, pattern);
-                foreach (var element in config)
-                    Console.WriteLine(element);
                 COM = config[0].Split(new char[0]); //Split on space com_name || COM1
                 baud = config[1].Split(new char[0]);//Split on space Baud_rate || 300
                 enabledData = config[2].Split(new char[0]);
@@ -93,15 +91,15 @@ namespace GUI
                 if (c is CheckBox)
                 {
                     CheckBox cb = (CheckBox)c;
-                        cb.Checked = true;
+                    cb.Checked = true;
                 }
             }
         }
-
+        
         private void button1_Click(object sender, EventArgs e)
         {
 
-            if(ComBox.SelectedItem != null && ComBox.SelectedText.ToString() != "No COM-port Available" && Baud_box.SelectedItem != null)
+            if(ComBox.SelectedItem != null && ComBox.SelectedItem.ToString() != "No COM-port Available" && Baud_box.SelectedItem != null)
             {
                 bool exists = System.IO.Directory.Exists(folderpath);
                 if (!exists)
