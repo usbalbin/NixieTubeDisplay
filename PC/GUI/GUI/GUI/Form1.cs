@@ -71,30 +71,38 @@ namespace GUI
 
         private void button1_Click(object sender, EventArgs e)
         {
-            string folderpath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile)+"\\NixieTubeController";
-            string subPath = folderpath; // your code goes here
 
-            bool exists = System.IO.Directory.Exists(subPath);
-
-            if (!exists)
-                System.IO.Directory.CreateDirectory(subPath);
-
-            
-            string text = "com_name " + ComBox.SelectedItem.ToString() + "\n" +
-                "com_baud " + Baud_box.SelectedItem.ToString() + "\n";   
-            foreach (Control c in Controls)
+            if(ComBox.SelectedItem != null && ComBox.SelectedText != "No COM-port Available" && Baud_box.SelectedItem != null)
             {
-                if (c is CheckBox)
+                string folderpath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\NixieTubeController";
+                string subPath = folderpath; // your code goes here
+
+                bool exists = System.IO.Directory.Exists(subPath);
+                if (!exists)
+                    System.IO.Directory.CreateDirectory(subPath);
+
+
+
+                string text = "com_name " + ComBox.SelectedItem.ToString() + "\n" +
+                    "com_baud " + Baud_box.SelectedItem.ToString() + "\n";
+                foreach (Control c in Controls)
                 {
-                    CheckBox cb = (CheckBox)c;
-                    if (cb.Checked == true)
+                    if (c is CheckBox)
                     {
-                        text += cb.Text.ToString()+" ";
+                        CheckBox cb = (CheckBox)c;
+                        if (cb.Checked == true)
+                        {
+                            text += cb.Text.ToString() + " ";
+                        }
                     }
                 }
+                System.IO.File.WriteAllText(@folderpath + "Settings.txt", text);
+            }
+            else
+            {
+                MessageBox.Show("No COM Port or Baudrate selected");
             }
             
-            System.IO.File.WriteAllText(@folderpath+ "Settings.txt", text);
         }
 
         private void Form1_Load(object sender, EventArgs e)

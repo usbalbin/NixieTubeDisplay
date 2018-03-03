@@ -337,7 +337,7 @@
             // Form1
             // 
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Inherit;
-            this.ClientSize = new System.Drawing.Size(807, 510);
+            this.ClientSize = new System.Drawing.Size(778, 510);
             this.Controls.Add(this.label6);
             this.Controls.Add(this.Baud_box);
             this.Controls.Add(this.Select_Btn);
