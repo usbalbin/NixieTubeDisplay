@@ -9,17 +9,14 @@ use nvapi_sys::gpu::NvAPI_EnumPhysicalGPUs;
 use nvapi_sys::handles::NvPhysicalGpuHandle;
 
 use nvapi_sys::gpu::thermal::{
-    NV_GPU_THERMAL_SETTINGS,
-    NV_GPU_THERMAL_SETTINGS_VER,
     NVAPI_THERMAL_TARGET_ALL,
-    NvAPI_GPU_GetThermalSettings,
-    NVAPI_THERMAL_TARGET_GPU
+    NvAPI_GPU_GetThermalSettings
 };
 
 pub fn get_gpus() -> Vec<NvPhysicalGpuHandle> {
     unsafe {
         let status = NvAPI_Initialize();
-        if status == 0 {
+        if status != 0 {
             println!("Failed to initialize NvAPI with status: {}. No Nvidia GPU present?", status);
             return vec![];
         }
@@ -39,18 +36,45 @@ pub fn get_gpus() -> Vec<NvPhysicalGpuHandle> {
 }
 
 pub fn get_gpu_temp(gpu: &NvPhysicalGpuHandle) -> i32 {
+    use nvapi_sys::gpu::thermal::{
+        NV_GPU_THERMAL_SETTINGS,
+        NV_GPU_THERMAL_SETTINGS_VER
+    };
+
     let mut info = NV_GPU_THERMAL_SETTINGS::zeroed();
     info.version = NV_GPU_THERMAL_SETTINGS_VER;
 
     unsafe {
         let status = NvAPI_GPU_GetThermalSettings(*gpu, NVAPI_THERMAL_TARGET_ALL as u32, &mut info);
-        if status == 0 {
-            //"Failed to get GPU-temp with status: {}";
+        if status != 0 {
+            println!("Failed to get GPU-temp with status: {}", status);
             return 0;
         };
     }
 
-    info.sensor[NVAPI_THERMAL_TARGET_GPU as usize].currentTemp
+    info.sensor[0 as usize].currentTemp
+}
+
+pub fn get_gpu_usage(gpu: &NvPhysicalGpuHandle) -> u32 {
+    use nvapi_sys::gpu::pstate::{
+        NV_GPU_DYNAMIC_PSTATES_INFO_EX,
+        NV_GPU_DYNAMIC_PSTATES_INFO_EX_VER,
+        NvAPI_GPU_GetDynamicPstatesInfoEx,
+        NVAPI_GPU_UTILIZATION_DOMAIN_GPU
+    };
+
+    let mut info = NV_GPU_DYNAMIC_PSTATES_INFO_EX::zeroed();
+    info.version = NV_GPU_DYNAMIC_PSTATES_INFO_EX_VER;
+
+    unsafe {
+        let status = NvAPI_GPU_GetDynamicPstatesInfoEx(*gpu, &mut info);
+        if status != 0 {
+            println!("Failed to get GPU-usage with status: {}", status);
+            return 0;
+        };
+    }
+
+    info.utilization[NVAPI_GPU_UTILIZATION_DOMAIN_GPU as usize].percentage
 }
 
 pub fn get_cpu_usage() -> f64 {
