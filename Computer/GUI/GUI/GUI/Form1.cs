@@ -117,9 +117,7 @@ namespace GUI
 
         private void button1_Click(object sender, EventArgs e)
         {
-            reloadConfig = 1;
-
-            if (ComBox.SelectedItem != null && ComBox.SelectedItem.ToString() != "No COM-port Available" && Baud_box.SelectedItem != null)
+            if (ComBox.SelectedItem != null /*&& ComBox.SelectedItem.ToString() != "No COM-port Available"*/ && Baud_box.SelectedItem != null)
             {
                 bool exists = System.IO.Directory.Exists(folderpath);
                 if (!exists)
@@ -139,6 +137,7 @@ namespace GUI
                     }
                 }
                 System.IO.File.WriteAllText(@folderpath + "settings.conf", text);
+                reloadConfig = 1;
             }
             else
             {
@@ -157,6 +156,8 @@ namespace GUI
             {
                 string[] result = elem.Split(new char[0]);
                 string name = result[0];
+                if (name.Length == 0)
+                    continue;
                 name += "_result";
                 if (!kamel.ContainsKey(name))
                     throw new System.ArgumentException("felaktig label");
@@ -204,17 +205,17 @@ namespace GUI
                         }
 
                     }
-                    catch (Exception e)
+                    catch (SocketException e)
                     {
-                        var try_again = MessageBox.Show("Retry?", "Failed to connecto to server!", MessageBoxButtons.YesNo);
+                        var try_again = MessageBox.Show("Failed to connecto to server with error:" + e.ToString() + "\n Retry?", "Failed to connecto to server!", MessageBoxButtons.YesNo);
                         if (try_again != DialogResult.Yes)
                             return;
                     }
 
                 }
-                catch (Exception e)
+                catch (SocketException e)
                 {
-                    var try_again = MessageBox.Show("Retry?", "Failed to connecto to server!", MessageBoxButtons.YesNo);
+                    var try_again = MessageBox.Show("Failed to connecto to server with error:" + e.ToString() + "\n Retry?", "Failed to connecto to server!", MessageBoxButtons.YesNo);
                     if (try_again != DialogResult.Yes)
                         return;
                 }
