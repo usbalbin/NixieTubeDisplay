@@ -19,6 +19,9 @@ namespace GUI
     {
         string folderpath = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\NixieTubeController\\";
         string ConfigText;
+        string[] COM;
+        string[] baud;
+        string[] enabledData;
         public Form1()
         {
             InitializeComponent();
@@ -37,29 +40,24 @@ namespace GUI
             if (exists)
             {
                 ConfigText = System.IO.File.ReadAllText(folderpath + "settings.conf");
-            }
-            string pattern = @"\n";
-            string[] config = Regex.Split(ConfigText, pattern);
-            foreach (var element in config)
-                Console.WriteLine(element);
-            string[] COM = config[0].Split(new char[0]); //Split on space com_name || COM1
-            string[] baud = config[1].Split(new char[0]);//Split on space Baud_rate || 300
-            string[] enabledData = config[2].Split(new char[0]);
-            foreach (Control c in Controls)
-            {
-                if (c is CheckBox)
+                string pattern = @"\n";
+                string[] config = Regex.Split(ConfigText, pattern);
+                COM = config[0].Split(new char[0]); //Split on space com_name || COM1
+                baud = config[1].Split(new char[0]);//Split on space Baud_rate || 300
+                enabledData = config[2].Split(new char[0]);
+                foreach (Control c in Controls)
                 {
-                   CheckBox cb = (CheckBox)c;
-                    cb.Checked = enabledData.Contains(cb.Text);
+                    if (c is CheckBox)
+                    {
+                        CheckBox cb = (CheckBox)c;
+                        cb.Checked = enabledData.Contains(cb.Text);
+                    }
                 }
+
+                //LOAD INFO FROM FILE TO PROGRAM
+                ComBox.SelectedItem = COM[1]; //
+                Baud_box.SelectedItem = baud[1];
             }
-
-            //LOAD INFO FROM FILE TO PROGRAM
-            ComBox.SelectedItem = COM[1]; //
-            Baud_box.SelectedItem = baud[1];
-
-            Console.WriteLine(config[2]);
-
         }
 
         private void Ext_btn_Click(object sender, EventArgs e)
@@ -93,22 +91,22 @@ namespace GUI
                 if (c is CheckBox)
                 {
                     CheckBox cb = (CheckBox)c;
-                        cb.Checked = true;
+                    cb.Checked = true;
                 }
             }
         }
-
+        
         private void button1_Click(object sender, EventArgs e)
         {
 
-            if(ComBox.SelectedItem != null && ComBox.SelectedText != "No COM-port Available" && Baud_box.SelectedItem != null)
+            if(ComBox.SelectedItem != null && ComBox.SelectedItem.ToString() != "No COM-port Available" && Baud_box.SelectedItem != null)
             {
                 bool exists = System.IO.Directory.Exists(folderpath);
                 if (!exists)
                     System.IO.Directory.CreateDirectory(folderpath);
 
                 string text = "com_name " + ComBox.SelectedItem.ToString() + "\n" +
-                    "com_baud " + Baud_box.SelectedItem.ToString() + "\n";
+                    "com_baud " + Baud_box.SelectedItem.ToString() + "\n"+ "propeties ";
                 foreach (Control c in Controls)
                 {
                     if (c is CheckBox)
