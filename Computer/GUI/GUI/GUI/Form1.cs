@@ -70,6 +70,11 @@ namespace GUI
                 ComBox.SelectedItem = COM[1]; //
                 Baud_box.SelectedItem = baud[1];
             }
+
+            new System.Threading.Thread(() => {
+                System.Threading.Thread.CurrentThread.IsBackground = true;
+                this.HandleNetwork();
+            }).Start();
         }
 
         private void Ext_btn_Click(object sender, EventArgs e)
@@ -156,7 +161,7 @@ namespace GUI
 
             }
 
-
+        }
 
         void HandleNetwork()
         {
@@ -178,7 +183,7 @@ namespace GUI
 
                     while (true)
                     {
-                        bool reload_config = false;
+                        bool reload_config = System.Threading.Interlocked.CompareExchange(ref this.reload_config, false, true);//TODO: Check me!!!
                         while (socket.Send(new byte[1] { reload_config ? (byte)1 : (byte)0 }) != 1)
                         {
                             Console.WriteLine("Failed to send to server");
@@ -187,8 +192,7 @@ namespace GUI
                         int bytes_recieved = socket.Receive(buffer);
 
                         string recieved_result = Encoding.ASCII.GetString(buffer, 0, bytes_recieved);
-
-                        //call_stuff();
+                        DisplayData(recieved_result);
                     }
 
                 }
@@ -204,5 +208,4 @@ namespace GUI
             }
         }
     }
-    
 }
