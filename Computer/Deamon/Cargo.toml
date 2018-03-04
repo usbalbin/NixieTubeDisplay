@@ -5,7 +5,11 @@ authors = ["usbalbin <albin9604@gmail.com>"]
 build = "build.rs"
 
 [dependencies]
+lazy_static = "1.0.0"
+
 sys-info = "0.5.6"
 
 nvapi = "0.0.3"
 nvapi-sys = "0.0.3"
+
+serialport = { git = "https://gitlab.com/susurrus/serialport-rs.git" }
