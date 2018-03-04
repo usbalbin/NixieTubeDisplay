@@ -10,7 +10,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Text.RegularExpressions;
-
+using System.Net;
+using System.Net.Sockets;
 
 
 namespace GUI
@@ -128,5 +129,50 @@ namespace GUI
         }
 
 
+        void HandleNetwork()
+        {
+            const int PORT = 12345;
+
+            byte[] buffer = new byte[1024];
+
+            try
+            {
+                var ip = IPAddress.Loopback;
+                Socket socket = new Socket(ip.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+                IPEndPoint server = new IPEndPoint(ip, PORT);
+
+                try
+                {
+                    socket.Connect(server);
+
+                    Console.WriteLine("Connected to deamon");
+
+                    while (true)
+                    {
+                        bool reload_config = false;
+                        while (socket.Send(new byte[1] { reload_config ? (byte)1 : (byte)0 }) != 1)
+                        {
+                            Console.WriteLine("Failed to send to server");
+                        };
+
+                        int bytes_recieved = socket.Receive(buffer);
+
+                        string recieved_result = Encoding.ASCII.GetString(buffer, 0, bytes_recieved);
+
+                        //call_stuff();
+                    }
+
+                }
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.ToString());
+                }
+
+            }
+            catch (Exception e)
+            {
+                Console.WriteLine(e.ToString());
+            }
+        }
     }
 }
