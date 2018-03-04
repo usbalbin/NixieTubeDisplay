@@ -22,11 +22,13 @@ namespace GUI
         string[] COM;
         string[] baud;
         string[] enabledData;
+        Int32 reloadConfig = 0;
         Dictionary<string, Label> kamel;
 
         public Form1()
         {
             InitializeComponent();
+            
 
             kamel = new Dictionary<string, Label>();
             foreach (Control c in Controls)
@@ -115,6 +117,7 @@ namespace GUI
 
         private void button1_Click(object sender, EventArgs e)
         {
+            reloadConfig = 1;
 
             if (ComBox.SelectedItem != null && ComBox.SelectedItem.ToString() != "No COM-port Available" && Baud_box.SelectedItem != null)
             {
@@ -144,8 +147,9 @@ namespace GUI
 
         }
 
-        public void DisplayData(string incommingData) {
-            
+        public void DisplayData(string incommingData)
+        {
+
             string pattern = @"\n";
             string[] results = Regex.Split(incommingData, pattern);
 
@@ -153,11 +157,13 @@ namespace GUI
             {
                 string[] result = elem.Split(new char[0]);
                 string name = result[0];
-                name +="_result";
+                name += "_result";
                 if (!kamel.ContainsKey(name))
                     throw new System.ArgumentException("felaktig label");
                 string value = result[1];
-                kamel[name].Text = value;
+                kamel[name].Invoke((MethodInvoker)delegate{
+                    kamel[name].Text = value;
+                });
 
             }
 
@@ -169,43 +175,51 @@ namespace GUI
 
             byte[] buffer = new byte[1024];
 
-            try
+            while (true)
             {
-                var ip = IPAddress.Loopback;
-                Socket socket = new Socket(ip.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
-                IPEndPoint server = new IPEndPoint(ip, PORT);
-
                 try
                 {
-                    socket.Connect(server);
+                    var ip = IPAddress.Loopback;
+                    Socket socket = new Socket(ip.AddressFamily, SocketType.Stream, ProtocolType.Tcp);
+                    IPEndPoint server = new IPEndPoint(ip, PORT);
 
-                    Console.WriteLine("Connected to deamon");
-
-                    while (true)
+                    try
                     {
-                        bool reload_config = System.Threading.Interlocked.CompareExchange(ref this.reload_config, false, true);//TODO: Check me!!!
-                        while (socket.Send(new byte[1] { reload_config ? (byte)1 : (byte)0 }) != 1)
+                        socket.Connect(server);
+
+                        Console.WriteLine("Connected to deamon");
+
+                        while (true)
                         {
-                            Console.WriteLine("Failed to send to server");
-                        };
+                            bool reload_config = System.Threading.Interlocked.CompareExchange(ref this.reloadConfig, 0, 1) == 1;//TODO: Check me!!!
+                            while (socket.Send(new byte[1] { reload_config ? (byte)1 : (byte)0 }) != 1)
+                            {
+                                Console.WriteLine("Failed to send to server");
+                            };
 
-                        int bytes_recieved = socket.Receive(buffer);
+                            int bytes_recieved = socket.Receive(buffer);
 
-                        string recieved_result = Encoding.ASCII.GetString(buffer, 0, bytes_recieved);
-                        DisplayData(recieved_result);
+                            string recieved_result = Encoding.ASCII.GetString(buffer, 0, bytes_recieved);
+                            DisplayData(recieved_result);
+                        }
+
+                    }
+                    catch (Exception e)
+                    {
+                        var try_again = MessageBox.Show("Retry?", "Failed to connecto to server!", MessageBoxButtons.YesNo);
+                        if (try_again != DialogResult.Yes)
+                            return;
                     }
 
                 }
                 catch (Exception e)
                 {
-                    Console.WriteLine(e.ToString());
+                    var try_again = MessageBox.Show("Retry?", "Failed to connecto to server!", MessageBoxButtons.YesNo);
+                    if (try_again != DialogResult.Yes)
+                        return;
                 }
-
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine(e.ToString());
             }
         }
+
     }
 }
