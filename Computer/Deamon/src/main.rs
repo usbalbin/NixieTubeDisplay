@@ -50,8 +50,11 @@ lazy_static!{
         first_gpu_usage,
 
         ram_usage,
+        ram_usage_mb,
         disk_usage,
-        time_clock
+        disk_usage_mb,
+        time_clock,
+        time_date
     ];
 
 }
@@ -299,7 +302,10 @@ fn debug_print_all() {
 
     println!("CPU usage: {}%", cpu_usage());
     println!("CPU temp: {} C", cpu_temp());
-    println!("RAM usage: {} MB", ram_usage());
-    println!("Disk usage: {} MB", disk_usage());
+    println!("RAM usage: {} %", ram_usage());
+    println!("RAM usage: {} MB", ram_usage_mb());
+    println!("Disk usage: {} %", disk_usage());
+    println!("Disk usage: {} MB", disk_usage_mb());
     println!("Time clock: {}", time_clock());
+    println!("Time date: {}", time_date());
 }

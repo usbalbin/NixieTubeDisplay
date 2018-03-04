@@ -45,10 +45,7 @@ namespace GUI
             {
                 ComBox.Items.Add(s);
             }
-            if (ComBox.Items.Count == 0)
-            {
-                ComBox.Items.Add("No COM-port Available");
-            }
+            ComBox.Items.Add("DebugPort");
 
             bool exists = System.IO.File.Exists(folderpath + "settings.conf");
             if (exists)
@@ -117,14 +114,14 @@ namespace GUI
 
         private void button1_Click(object sender, EventArgs e)
         {
-            if (ComBox.SelectedItem != null /*&& ComBox.SelectedItem.ToString() != "No COM-port Available"*/ && Baud_box.SelectedItem != null)
+            if (ComBox.SelectedItem != null && Baud_box.SelectedItem != null)
             {
                 bool exists = System.IO.Directory.Exists(folderpath);
                 if (!exists)
                     System.IO.Directory.CreateDirectory(folderpath);
 
                 string text = "com_name " + ComBox.SelectedItem.ToString() + "\n" +
-                    "com_baud " + Baud_box.SelectedItem.ToString() + "\n" + "propeties ";
+                    "com_baud " + Baud_box.SelectedItem.ToString() + "\n" + "properties ";
                 foreach (Control c in Controls)
                 {
                     if (c is CheckBox)
