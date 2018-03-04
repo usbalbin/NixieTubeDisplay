@@ -17,9 +17,9 @@ use deamon::cpu;
 
 use std::collections::HashMap;
 
-thread_local!{
-    static GPUS: Vec<NvPhysicalGpuHandle> =  get_gpus();
-}
+use std::thread::spawn;
+use std::sync::atomic::AtomicBool;
+use std::sync::atomic::Ordering;
 
 macro_rules! map {
     ($ ( $x:expr ),* ) => {
@@ -33,7 +33,13 @@ macro_rules! map {
     };
 }
 
+thread_local!{
+    static GPUS: Vec<NvPhysicalGpuHandle> =  get_gpus();
+}
+
 lazy_static!{
+    static ref TIME_TO_RELOAD: AtomicBool = AtomicBool::new(true);
+
     static ref TJ_MAX: i32 = cpu::get_cpu_tj_max();
 
     static ref FUNCTION_MAP: HashMap<String, fn() -> i32> = map![
@@ -47,12 +53,6 @@ lazy_static!{
     ];
 
 }
-
-
-
-
-
-
 
 
 fn get_cpu_temp() -> i32 {
@@ -70,7 +70,6 @@ fn get_first_gpu_usage() -> i32 {
         get_gpu_usage(&gpus[0])
     )
 }
-
 
 struct Config {
     baud_rate: u32,
@@ -151,8 +150,7 @@ fn load_config(path: &str) -> Config {
     }
 }
 
-
-fn open_comport(config: &Config) -> Box<serialport::SerialPort> {
+fn open_comport(config: &Config) -> Option<Box<serialport::SerialPort>> {
     use serialport::prelude::*;
     use std::time::Duration;
 
@@ -164,40 +162,114 @@ fn open_comport(config: &Config) -> Box<serialport::SerialPort> {
         flow_control: FlowControl::None,
         parity: Parity::None,
         stop_bits: StopBits::One,
-        timeout: Duration::from_millis(100)
+        timeout: Duration::from_millis(200)
     };
 
-    serialport::open_with_settings(
+    let port = serialport::open_with_settings(
         "COM1",
         &settings
-    ).expect(&format!("Failed to open serial connection on port {}", config.com_name))
+    );
+    match port {
+        Ok(p) => Some(p),
+
+        Err(e) => {
+            println!("Failed to open serial connection on port {}, with: {}", config.com_name, e);
+            None
+        }
+    }
+}
+
+fn handle_comport() {
+    let mut index = 0;
+    let mut config = load_config("");
+    let mut com_port = open_comport(&config);
+
+    let mut functions: Vec<_> = config.properties.iter()
+        .map(|property| FUNCTION_MAP[property]).collect();
+
+    loop {
+        if TIME_TO_RELOAD.swap(false, Ordering::Relaxed) {
+            config = load_config("");
+            com_port = open_comport(&config);
+
+            functions = config.properties.iter()
+                .map(|property| FUNCTION_MAP[property]).collect();
+            index %= functions.len();
+        }
+
+
+        if let Some(ref mut com_port) = com_port {
+            let mut step = [0u8; 1];
+            com_port.read_exact(step.as_mut()).expect("Failed to read from arduino");
+            let step = step[0] as i8;
+
+            index += step as usize;
+            index %= functions.len();
+
+            let value = functions[index]();
+            let data = format!("{}", value);
+
+            com_port.write(data.as_bytes()).expect("Failed to write to arduino!");
+        } else {
+            debug_print_all();
+        }
+    }
+}
+
+fn handle_client(mut client: std::net::TcpStream) {
+    use std::io::Read;
+    println!("Client connected!!");
+
+    loop {
+        let mut data = [1];
+
+        match client.read_exact(data.as_mut()) {
+            Ok(()) => {
+                if data[0] != 0 {
+                    TIME_TO_RELOAD.store(true, Ordering::Relaxed);
+                }
+                let sensor_data = FUNCTION_MAP.iter()
+                    .fold(String::new(), |acc, (name, f)|
+                        format!("{}\n{} {}", acc, name, f())
+                    );
+                if let Err(_) = client.write_all(sensor_data.as_bytes()) {
+                    println!("Client disconnected");
+                    return;
+                }
+            },
+            Err(_) =>{
+                println!("Client disconnected");
+                return
+            },
+        }
+        std::thread::sleep(std::time::Duration::from_millis(100));
+    }
+}
+
+fn handle_network() {
+    use std::net::TcpListener;
+
+    let listener = TcpListener::bind("127.0.0.1:12345").expect("Failed to open server at port: 12345");
+
+    loop {
+        for client in listener.incoming() {
+            match client {
+                Ok(client) => {
+                    spawn(move || handle_client(client));
+                },
+                Err(err) => {
+                    println!("Client failed to connect with: {}", err)
+                },
+            }
+        }
+    }
 }
 
 fn main() {
-    let config = load_config("");
-
     cpu::cpu_init();
-    let mut com_port = open_comport(&config);
 
-    let functions: Vec<_> = config.properties.iter()
-        .map(|property| FUNCTION_MAP[property]).collect();
-    let mut index = 0;
-
-    loop {
-        debug_print_all();
-
-        let mut step = [0u8; 1];
-        com_port.read_exact(step.as_mut()).expect("Failed to read from arduino");
-        let step = step[0] as i8;
-
-        index += step as usize;
-        index %= functions.len();
-
-        let value = functions[index]();
-        let data = format!("{}", value);
-
-        com_port.write(data.as_bytes()).expect("Failed to write to arduino!");
-    }
+    spawn(|| handle_comport());
+    handle_network();
 
     //unsafe{ cpu::cpu_drop(h) };
 }
