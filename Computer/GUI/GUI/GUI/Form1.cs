@@ -22,11 +22,13 @@ namespace GUI
         string[] COM;
         string[] baud;
         string[] enabledData;
+        bool reloadConfig = false;
         Dictionary<string, Label> kamel;
 
         public Form1()
         {
             InitializeComponent();
+            
 
             kamel = new Dictionary<string, Label>();
             foreach (Control c in Controls)
@@ -110,6 +112,7 @@ namespace GUI
 
         private void button1_Click(object sender, EventArgs e)
         {
+            reloadConfig = true;
 
             if (ComBox.SelectedItem != null && ComBox.SelectedItem.ToString() != "No COM-port Available" && Baud_box.SelectedItem != null)
             {
@@ -139,8 +142,9 @@ namespace GUI
 
         }
 
-        public void DisplayData(string incommingData) {
-            
+        public void DisplayData(string incommingData)
+        {
+
             string pattern = @"\n";
             string[] results = Regex.Split(incommingData, pattern);
 
@@ -148,16 +152,18 @@ namespace GUI
             {
                 string[] result = elem.Split(new char[0]);
                 string name = result[0];
-                name +="_result";
+                name += "_result";
                 if (!kamel.ContainsKey(name))
                     throw new System.ArgumentException("felaktig label");
                 string value = result[1];
-                kamel[name].Text = value;
+                kamel[name].Invoke((MethodInvoker)delegate{
+                    kamel[name].Text = value;
+                });
 
             }
 
-
-
+        }
+        
         void HandleNetwork()
         {
             const int PORT = 12345;
@@ -203,6 +209,6 @@ namespace GUI
                 Console.WriteLine(e.ToString());
             }
         }
+
     }
-    
 }
