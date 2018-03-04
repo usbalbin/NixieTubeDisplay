@@ -13,7 +13,6 @@ using System.Text.RegularExpressions;
 using System.Net;
 using System.Net.Sockets;
 
-
 namespace GUI
 {
     public partial class Form1 : Form
@@ -23,10 +22,22 @@ namespace GUI
         string[] COM;
         string[] baud;
         string[] enabledData;
+        Dictionary<string, Label> kamel;
+
         public Form1()
         {
             InitializeComponent();
-            string[] baudrate = new string[] { "300", "1200", "2400", "4800", "9600", "14400", "19200", "28800", "30400", "38400", "57600", "115200"};
+
+            kamel = new Dictionary<string, Label>();
+            foreach (Control c in Controls)
+            {
+                if (c is Label)
+                {
+                    kamel.Add(c.Name, (Label)c);
+                }
+            }
+
+            string[] baudrate = new string[] { "300", "1200", "2400", "4800", "9600", "14400", "19200", "28800", "30400", "38400", "57600", "115200" };
             Baud_box.Items.AddRange(baudrate);
             foreach (string s in System.IO.Ports.SerialPort.GetPortNames())
             {
@@ -68,18 +79,18 @@ namespace GUI
 
         private void Select_btn_Click(object sender, EventArgs e)
         {
-            foreach(Control c in Controls)
+            foreach (Control c in Controls)
             {
-                if(c is CheckBox)
+                if (c is CheckBox)
                 {
                     CheckBox cb = (CheckBox)c;
-                    if(cb.Checked == false)
+                    if (cb.Checked == false)
                     {
                         cb.Checked = true;
                     }
                     else
                     {
-                        cb.Checked = false;   
+                        cb.Checked = false;
                     }
                 }
             }
@@ -96,18 +107,18 @@ namespace GUI
                 }
             }
         }
-        
+
         private void button1_Click(object sender, EventArgs e)
         {
 
-            if(ComBox.SelectedItem != null && ComBox.SelectedItem.ToString() != "No COM-port Available" && Baud_box.SelectedItem != null)
+            if (ComBox.SelectedItem != null && ComBox.SelectedItem.ToString() != "No COM-port Available" && Baud_box.SelectedItem != null)
             {
                 bool exists = System.IO.Directory.Exists(folderpath);
                 if (!exists)
                     System.IO.Directory.CreateDirectory(folderpath);
 
                 string text = "com_name " + ComBox.SelectedItem.ToString() + "\n" +
-                    "com_baud " + Baud_box.SelectedItem.ToString() + "\n"+ "propeties ";
+                    "com_baud " + Baud_box.SelectedItem.ToString() + "\n" + "propeties ";
                 foreach (Control c in Controls)
                 {
                     if (c is CheckBox)
@@ -125,8 +136,26 @@ namespace GUI
             {
                 MessageBox.Show("No COM Port or Baudrate selected");
             }
-            
+
         }
+
+        public void DisplayData(string incommingData) {
+            
+            string pattern = @"\n";
+            string[] results = Regex.Split(incommingData, pattern);
+
+            foreach (var elem in results)
+            {
+                string[] result = elem.Split(new char[0]);
+                string name = result[0];
+                name +="_result";
+                if (!kamel.ContainsKey(name))
+                    throw new System.ArgumentException("felaktig label");
+                string value = result[1];
+                kamel[name].Text = value;
+
+            }
+
 
 
         void HandleNetwork()
@@ -175,4 +204,5 @@ namespace GUI
             }
         }
     }
+    
 }
