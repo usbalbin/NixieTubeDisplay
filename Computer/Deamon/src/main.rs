@@ -4,6 +4,7 @@ extern crate lazy_static;
 extern crate serialport;
 extern crate deamon;
 extern crate nvapi_sys;
+extern crate term;
 
 use std::io::Read;
 use std::io::Write;
@@ -194,6 +195,8 @@ fn open_comport(config: &Config) -> Option<Box<serialport::SerialPort>> {
 }
 
 fn handle_comport() {
+    let mut t = term::stdout().unwrap();
+
     let mut index = 0;
     let mut config = load_config();
     let mut com_port = open_comport(&config);
@@ -225,7 +228,7 @@ fn handle_comport() {
 
             com_port.write(data.as_bytes()).expect("Failed to write to arduino!");
         } else {
-            debug_print_all();
+            debug_print_all(&mut t);
             std::thread::sleep(std::time::Duration::from_millis(1000));
         }
     }
@@ -290,7 +293,7 @@ fn main() {
     //unsafe{ cpu::cpu_drop(h) };
 }
 
-fn debug_print_all() {
+fn debug_print_all(t: &mut Box<term::StdoutTerminal>) {
     print!("{}", "\n".repeat(5));
 
     GPUS.with(|gpus| {
@@ -300,12 +303,55 @@ fn debug_print_all() {
         }
     });
 
-    println!("CPU usage: {}%", cpu_usage());
-    println!("CPU temp: {} C", cpu_temp());
-    println!("RAM usage: {} %", ram_usage());
-    println!("RAM usage: {} MB", ram_usage_mb());
-    println!("Disk usage: {} %", disk_usage());
-    println!("Disk usage: {} MB", disk_usage_mb());
+    print_percentage("CPU usage: ", cpu_usage(), t);
+    print_colored("CPU temp:  ", cpu_temp(), " C", 20, *TJ_MAX, t);
+    print_pair("RAM usage: ", ram_usage(), ram_usage_mb(), t);
+    print_pair("Disk usage:", disk_usage(), disk_usage_mb(), t);
     println!("Time clock: {}", time_clock());
-    println!("Time date: {}", time_date());
+    println!("Time date:  {}", time_date());
+}
+
+fn print_percentage(text: &str, x: i32, t: &mut Box<term::StdoutTerminal>) {
+    print_colored(text, x, "%",0, 100, t);
+}
+
+fn print_colored(text: &str, x: i32, suffix: &str, low: i32, high: i32, t: &mut Box<term::StdoutTerminal>) {
+    let percentage = (x - low) as f32 / (high - low) as f32;
+
+    write!(t, "{}", text).unwrap();
+
+    let color = if percentage > 0.75 {
+        term::color::RED
+    } else if percentage > 0.50 {
+        term::color::YELLOW
+    } else if percentage > 0.25 {
+        term::color::GREEN
+    } else {
+        term::color::BRIGHT_BLUE
+    };
+
+
+
+    t.fg(color).unwrap();
+    writeln!(t, " {}{}", x, suffix).unwrap();
+    t.reset().unwrap();
+}
+
+fn print_pair(text: &str, percentage: i32, value: i32, t: &mut Box<term::StdoutTerminal>) {
+    let color = match percentage {
+        0...24 => term::color::BLUE,
+        25...49 => term::color::GREEN,
+        50...74 => term::color::YELLOW,
+        _ => term::color::RED,
+    };
+
+    write!(t, "{}", text).unwrap();
+    t.fg(color).unwrap();
+    writeln!(t, " {}%", percentage).unwrap();
+    t.reset().unwrap();
+
+    write!(t, "{}", text).unwrap();
+    t.fg(color).unwrap();
+    writeln!(t, " {} MB", value).unwrap();
+    t.reset().unwrap();
 }
